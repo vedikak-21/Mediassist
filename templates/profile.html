@@ -1,0 +1,44 @@
+{% extends 'auth_base.html' %}
+{% block content %}
+  <div class="auth-panel">
+    <div class="auth-panel__head">
+      <h2>Your profile</h2>
+      <p>Update your account details and profile picture.</p>
+    </div>
+
+    {% if error %}
+      <div class="auth-alert">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="auth-form">
+      <label>
+        Full name
+        <input type="text" name="full_name" value="{{ user.full_name }}" required />
+      </label>
+
+      <label>
+        Email
+        <input type="email" name="email" value="{{ user.email }}" required />
+      </label>
+
+      <label>
+        New password
+        <input type="password" name="password" placeholder="Leave blank to keep current" />
+      </label>
+
+      <label>
+        Confirm new password
+        <input type="password" name="confirm_password" placeholder="Repeat new password" />
+      </label>
+
+      <label>
+        Profile picture
+        <input type="file" name="profile_picture" accept="image/png,image/jpeg,image/jpg,image/gif" />
+      </label>
+
+      <button type="submit" class="btn btn--primary btn--block">Save profile</button>
+    </form>
+
+    <p class="auth-footer"><a href="{{ url_for('logout') }}">Logout</a></p>
+  </div>
+{% endblock %}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B1220" />
+  <meta name="description" content="MediAssist is an AI-powered healthcare assistant that helps users understand medical reports, explains symptoms, answers health-related questions, and promotes health awareness using Generative AI. It is intended for educational purposes only." />
+  <title>MediAssist — AI Healthcare Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <!-- Mobile overlay for slide-out sidebar -->
+  <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+  <div class="app" id="app">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+      <div class="sidebar__top">
+        <a class="brand" href="#" aria-label="MediAssist home">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v1H8a3 3 0 0 0-3 3v1H4a2 2 0 0 0 0 4h1v1a3 3 0 0 0 3 3h1v1a3 3 0 0 0 6 0v-1h1a3 3 0 0 0 3-3v-1h1a2 2 0 0 0 0-4h-1V9a3 3 0 0 0-3-3h-1V5a3 3 0 0 0-3-3Z"/>
+              <path d="M12 8v8M8 12h8"/>
+            </svg>
+          </span>
+          <span class="brand__name">MediAssist</span>
+        </a>
+        <button class="icon-btn sidebar__collapse" id="collapseBtn" title="Collapse sidebar" aria-label="Collapse sidebar">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+
+      <button class="btn btn--primary btn--block new-chat" id="newChatBtn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="label">New Chat</span>
+      </button>
+
+      <nav class="nav" aria-label="Sections">
+        <button class="nav__item is-active" data-view="chat">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="label">Chat History</span>
+        </button>
+        <button class="nav__item" data-view="reports">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+          <span class="label">Medical Reports</span>
+        </button>
+        <button class="nav__item" data-view="saved">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <span class="label">Saved Reports</span>
+        </button>
+        <button class="nav__item" data-view="dashboard">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12Z"/></svg>
+          <span class="label">AI Health Insights</span>
+        </button>
+
+        <div class="nav__section-label"><span class="label">Recent Chats</span></div>
+        <div class="chat-list" id="chatList" aria-label="Recent conversations"></div>
+      </nav>
+
+      <div class="sidebar__bottom">
+        <button class="nav__item" data-view="settings">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+          <span class="label">Settings</span>
+        </button>
+        <button class="profile" id="profileBtn">
+          {% if user and user.profile_picture %}
+            <img class="avatar" src="{{ url_for('static', filename=user.profile_picture) }}" alt="{{ user.full_name }}" width="36" height="36" />
+          {% else %}
+            <img class="avatar" src="{{ url_for('static', filename='assets/avatar-user.svg') }}" alt="Your profile" width="36" height="36" />
+          {% endif %}
+          <span class="profile__meta label">
+            <strong>{{ user.full_name if user else 'Guest' }}</strong>
+            <small>{{ 'Patient account' if user else 'Not signed in' }}</small>
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <div class="main">
+      <!-- Header -->
+      <header class="header">
+        <div class="header__left">
+          <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
+          <div class="header__title">
+            <h1 id="convTitle">New conversation</h1>
+            <span class="status" id="aiStatus"><span class="status__dot"></span> MediAssist online</span>
+          </div>
+        </div>
+        <div class="header__right">
+          <button class="btn btn--ghost header-new" id="headerNewChat">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>New Chat</span>
+          </button>
+          <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          </button>
+          <img class="avatar" src="{{ url_for('static', filename='assets/avatar-user.svg') }}" alt="Your profile" width="36" height="36" />
+        </div>
+      </header>
+
+      <!-- ===== CHAT VIEW ===== -->
+      <section class="view view--chat is-active" id="view-chat" aria-label="Chat">
+        <div class="chat-scroll" id="chatScroll">
+          <!-- Welcome screen -->
+          <div class="welcome" id="welcome">
+            <div class="welcome__badge">
+              <span class="status__dot"></span> AI Healthcare Companion
+            </div>
+            <h2 class="welcome__title">MediAssist</h2>
+            <p class="welcome__subtitle">Your AI Healthcare Companion — ask questions, upload reports, and understand your health with clarity.</p>
+
+            <div class="features">
+              <button class="feature-card" data-prompt="I'd like to upload a medical report for review.">
+                <span class="feature-card__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg></span>
+                <span class="feature-card__body"><strong>Upload Medical Reports</strong><small>PDF, PNG, or JPG lab results and scans</small></span>
+              </button>
+              <button class="feature-card" data-prompt="What are common causes of high blood pressure?">
+                <span class="feature-card__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></span>
+                <span class="feature-card__body"><strong>Ask Health Questions</strong><small>Symptoms, conditions, medications & more</small></span>
+              </button>
+              <button class="feature-card" data-prompt="Can you help me understand my recent blood test results?">
+                <span class="feature-card__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-6"/></svg></span>
+                <span class="feature-card__body"><strong>Understand Lab Results</strong><small>Plain-language explanations of your metrics</small></span>
+              </button>
+              <button class="feature-card" data-prompt="Show me my previous conversations.">
+                <span class="feature-card__icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg></span>
+                <span class="feature-card__body"><strong>Track Conversations</strong><small>Revisit past chats and saved insights</small></span>
+              </button>
+            </div>
+
+            <button class="btn btn--primary btn--lg welcome__cta" id="startConversation">
+              Start New Conversation
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+           <p class="welcome__disclaimer"><strong>Disclaimer:</strong> MediAssist provides AI-generated health information for educational purposes only. It does not diagnose medical conditions or replace professional medical advice, diagnosis, or treatment. Always consult a licensed healthcare professional before making healthcare decisions.</p>
+          </div>
+
+          <!-- Messages injected here -->
+          <div class="messages" id="messages" aria-live="polite"></div>
+        </div>
+
+        <!-- Chat input -->
+        <div class="composer">
+          <div class="composer__inner">
+            <div class="attachments" id="attachments" hidden></div>
+            <div class="composer__row">
+              <button class="icon-btn composer__attach" id="attachBtn" aria-label="Attach a file" title="Attach a file">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.05 12.25 20.2a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a2 2 0 0 1-2.82-2.83l8.49-8.48"/></svg>
+              </button>
+              <textarea id="composerInput" class="composer__input" rows="1" placeholder="Ask MediAssist anything..." aria-label="Message MediAssist"></textarea>
+              <button class="icon-btn composer__voice" id="voiceBtn" aria-label="Voice input (demo)" title="Voice input">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/></svg>
+              </button>
+              <button class="icon-btn composer__send" id="sendBtn" aria-label="Send message" title="Send">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="composer__hint">Press <kbd>Enter</kbd> to send · <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</p>
+          <div class="chat-disclaimer">
+          ⚠️AI responses are generated for educational purposes only and should not be considered medical advice. In emergencies, contact your healthcare provider immediately.
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg" multiple hidden />
+      </section>
+
+      <!-- ===== REPORTS VIEW ===== -->
+      <section class="view view--panel" id="view-reports" aria-label="Medical reports" hidden>
+        <div class="panel-scroll">
+          <div class="panel-head">
+            <div>
+              <h2>Medical Reports</h2>
+              <p class="muted">Upload, view, and manage your health documents.</p>
+            </div>
+            <div class="search">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="search" id="reportSearch" placeholder="Search reports..." aria-label="Search reports" />
+            </div>
+          </div>
+
+          <!-- Upload -->
+          <div class="uploader" id="dropzone" tabindex="0" role="button" aria-label="Upload a medical report">
+            <div class="uploader__icon">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
+            </div>
+            <h3>Drag &amp; drop your report here</h3>
+            <p class="muted">or <span class="link">browse files</span> — PDF, PNG, JPG, JPEG up to 20MB</p>
+          </div>
+
+          <div class="upload-progress" id="uploadProgress" hidden>
+            <div class="upload-progress__row">
+              <span id="uploadFileName">document.pdf</span>
+              <span id="uploadPct">0%</span>
+            </div>
+            <div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+          </div>
+
+          <div class="report-grid" id="reportGrid"></div>
+          <div class="empty" id="reportsEmpty" hidden>
+            <div class="empty__art"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <h3>No reports yet</h3>
+            <p class="muted">Upload a lab result or scan to get an instant AI summary.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SAVED VIEW ===== -->
+      <section class="view view--panel" id="view-saved" aria-label="Saved reports" hidden>
+        <div class="panel-scroll">
+          <div class="panel-head"><div><h2>Saved Reports</h2><p class="muted">Bookmarked summaries you can revisit anytime.</p></div></div>
+          <div class="empty">
+            <div class="empty__art"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+            <h3>Nothing saved yet</h3>
+            <p class="muted">Save any AI summary from a chat to keep it here.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== DASHBOARD / INSIGHTS VIEW ===== -->
+      <section class="view view--panel" id="view-dashboard" aria-label="AI health insights" hidden>
+        <div class="panel-scroll">
+          <div class="panel-head"><div><h2>AI Health Insights</h2><p class="muted">Personalized trends generated from your reports.</p></div></div>
+          <div class="insight-grid">
+            <article class="insight-card">
+              <span class="insight-card__label">Cholesterol</span>
+              <strong class="insight-card__value">182 <small>mg/dL</small></strong>
+              <span class="chip chip--ok">Within range</span>
+            </article>
+            <article class="insight-card">
+              <span class="insight-card__label">Blood Pressure</span>
+              <strong class="insight-card__value">128/84</strong>
+              <span class="chip chip--warn">Slightly elevated</span>
+            </article>
+            <article class="insight-card">
+              <span class="insight-card__label">Vitamin D</span>
+              <strong class="insight-card__value">22 <small>ng/mL</small></strong>
+              <span class="chip chip--warn">Low</span>
+            </article>
+            <article class="insight-card">
+              <span class="insight-card__label">Resting Heart Rate</span>
+              <strong class="insight-card__value">67 <small>bpm</small></strong>
+              <span class="chip chip--ok">Healthy</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SETTINGS VIEW ===== -->
+      <section class="view view--panel" id="view-settings" aria-label="Settings" hidden>
+        <div class="panel-scroll">
+          <div class="panel-head"><div><h2>Settings</h2><p class="muted">Personalize your MediAssist experience.</p></div></div>
+          <div class="settings-card">
+            <div class="setting-row">
+              <div><strong>Dark mode</strong><p class="muted">Use the dark healthcare theme.</p></div>
+              <button class="switch is-on" id="darkSwitch" role="switch" aria-checked="true" aria-label="Toggle dark mode"><span class="switch__thumb"></span></button>
+            </div>
+            <div class="setting-row">
+              <div><strong>Email notifications</strong><p class="muted">Get report summaries by email.</p></div>
+              <button class="switch" role="switch" aria-checked="false" aria-label="Toggle email notifications"><span class="switch__thumb"></span></button>
+            </div>
+            <div class="setting-row">
+              <div><strong>Save chat history</strong><p class="muted">Keep past conversations in the sidebar.</p></div>
+              <button class="switch is-on" role="switch" aria-checked="true" aria-label="Toggle chat history"><span class="switch__thumb"></span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Report quick-view modal -->
+  <div class="modal" id="reportModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__head">
+        <h3 id="modalTitle">Report preview</h3>
+        <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="{{ url_for('static', filename='auth.js') }}"></script>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
